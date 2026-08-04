@@ -122,7 +122,6 @@ export default function App() {
 
     const handleAutoSeat = async (queueId) => {
         try {
-            // Find best fitting available table
             const waitingParty = queue.find(q => q.id === queueId);
             if (!waitingParty) return;
 
@@ -132,7 +131,6 @@ export default function App() {
                 return;
             }
 
-            // Sort by smallest capacity
             availableTables.sort((a, b) => a.capacity - b.capacity);
             const targetTable = availableTables[0];
 
@@ -170,7 +168,7 @@ export default function App() {
             <div className="min-h-screen flex items-center justify-center bg-[#fafafa]">
                 <div className="text-center animate-fade-in">
                     <div className="w-12 h-12 border-2 border-black border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-sm tracking-widest uppercase text-gray-500">Loading</p>
+                    <p className="text-sm tracking-widest uppercase text-gray-500">Memuat System</p>
                 </div>
             </div>
         );
@@ -182,11 +180,9 @@ export default function App() {
             <header className="bg-black text-white sticky top-0 z-50">
                 <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-                            <span className="text-black font-black text-sm">R</span>
-                        </div>
-                        <h1 className="text-lg font-bold tracking-tight">Rasto</h1>
-                        <span className="text-xs text-gray-400 ml-1 hidden sm:inline">Queue Management</span>
+                        <img src="/Ratatulii.png" alt="Ratatouille Logo" className="w-8 h-8 rounded-lg object-cover bg-white p-0.5" />
+                        <h1 className="text-lg font-bold tracking-tight">Ratatouille</h1>
+                        <span className="text-xs text-gray-400 ml-1 hidden sm:inline">Manajemen Antrean Restoran</span>
                     </div>
                     <nav className="flex gap-1">
                         {['dashboard', 'history'].map(tab => (
@@ -199,7 +195,7 @@ export default function App() {
                                         : 'text-gray-400 hover:text-white hover:bg-white/10'
                                 }`}
                             >
-                                {tab}
+                                {tab === 'dashboard' ? 'Dashboard' : 'Riwayat'}
                             </button>
                         ))}
                     </nav>
@@ -213,22 +209,22 @@ export default function App() {
                         {/* Stats Bar */}
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                             <StatCard
-                                label="Available"
+                                label="Meja Kosong"
                                 value={tables.filter(t => t.status === 'available').length}
                                 color="bg-emerald-500"
                             />
                             <StatCard
-                                label="Dining"
+                                label="Sedang Makan"
                                 value={tables.filter(t => t.status === 'dining').length}
                                 color="bg-red-500"
                             />
                             <StatCard
-                                label="In Queue"
+                                label="Dalam Antrean"
                                 value={queue.length}
                                 color="bg-amber-500"
                             />
                             <StatCard
-                                label="Total Capacity"
+                                label="Total Kapasitas"
                                 value={tables.reduce((sum, t) => sum + t.capacity, 0)}
                                 color="bg-black"
                             />
@@ -237,7 +233,7 @@ export default function App() {
                         {/* Restaurant Grid + Form */}
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                             <div className="lg:col-span-2">
-                                <SectionHeader title="Floor Plan" subtitle="Drag parties from queue to assign tables" />
+                                <SectionHeader title="Denah Meja Restoran" subtitle="Geser antrean atau kartu ke meja kosong untuk menempatkan pelanggan" />
                                 <RestaurantGrid
                                     tables={tables}
                                     onForceComplete={handleForceComplete}
@@ -247,7 +243,7 @@ export default function App() {
                                 />
                             </div>
                             <div>
-                                <SectionHeader title="New Arrival" subtitle="Register a new party" />
+                                <SectionHeader title="Kedatangan Baru" subtitle="Daftarkan pelanggan yang baru datang" />
                                 <ArrivalForm onSubmit={handleArrive} />
                             </div>
                         </div>
@@ -255,15 +251,15 @@ export default function App() {
                         {/* Queue Section */}
                         <div>
                             <SectionHeader
-                                title="Waiting Queue"
-                                subtitle={`${queue.length} ${queue.length === 1 ? 'party' : 'parties'} waiting · Sorted by party size (largest first)`}
+                                title="Antrean Menunggu"
+                                subtitle={`${queue.length} ${queue.length === 1 ? 'pelanggan' : 'pelanggan'} menunggu · Diurutkan berdasarkan jumlah rombongan terbesar`}
                             />
                             <QueueList queue={queue} onAutoSeat={handleAutoSeat} />
                         </div>
                     </div>
                 ) : (
                     <div className="animate-fade-in">
-                        <SectionHeader title="Dining History" subtitle="Complete records of past dining sessions" />
+                        <SectionHeader title="Riwayat Makan" subtitle="Daftar riwayat sesi makan pelanggan yang telah selesai" />
                         <HistoryTable
                             history={history}
                             meta={historyMeta}

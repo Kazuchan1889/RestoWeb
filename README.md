@@ -1,100 +1,125 @@
-# Rasto Web — Restaurant Queue Management System
+# Ratatouille — Sistem Manajemen Antrean Restoran
 
-A web-based queue and table management application for restaurants built with Laravel, React, Vite, Tailwind CSS, and PostgreSQL.
+Aplikasi manajemen antrean dan alokasi meja restoran berbasis web interaktif yang dibangun menggunakan **Laravel 12**, **React + Vite**, **Tailwind CSS**, dan **PostgreSQL**.
 
-## Overview
+---
 
-Rasto Web helps restaurant staff efficiently manage customer arrivals, waiting queues, and table allocations in real time. It features a visual floor plan grid, drag-and-drop table assignment, dining countdown timers, priority queueing, and historical session logs.
+## Deskripsi Aplikasi
 
-## Key Features
+**Ratatouille** membantu staf dan *waiter* restoran dalam mengelola kedatangan pelanggan, antrean menunggu, serta penempatan meja secara *real-time*. Aplikasi ini dilengkapi dengan denah meja visual interaktif, fitur *drag-and-drop* untuk alokasi meja, pengukur waktu durasi makan (*countdown timer*), antrean prioritas, dan pencatatan riwayat sesi makan.
 
-- **Real-Time Floor Plan**: Visual grid layout showing table statuses (Available, Dining, Reserved).
-- **Drag & Drop Assignment**: Drag incoming customer tickets directly onto compatible empty tables.
-- **Priority Queue**: Automatically prioritizes larger parties to maximize table utilization and revenue.
-- **Dining Countdown**: Real-time timer indicating remaining dining duration for active sessions.
-- **Session History**: Paginated, filterable history log of completed dining sessions.
-- **Touchscreen POS Friendly**: Optimized UI layout for quick waiter inputs on POS terminals.
+---
 
-## Table Allocation Logic
+## Fitur Utama
 
-- **Tables Configuration**: Table A (2 seats), Table B (4 seats), Table C (6 seats), Table D (8 seats).
-- **Automatic Matching**: Customers are automatically seated at the smallest available table that fits their party size.
-- **Dining Duration**: Calculated dynamically using `(party_size × 15) + rand(5, 15)` minutes.
-- **Manual Transfers**: Waiters can manually reassign or transfer parties between compatible tables.
+- **Denah Meja Real-Time**: Visualisasi tata letak meja dengan indikator status (*Kosong*, *Sedang Makan*, *Dibersihkan*).
+- **Drag & Drop Penempatan Meja**: Geser tiket kedatangan atau antrean pelanggan langsung ke meja kosong yang sesuai dengan kapasitas.
+- **Antrean Prioritas (Priority Queue)**: Mengurutkan antrean berdasarkan jumlah rombongan terbesar untuk mengoptimalkan penggunaan kapasitas meja restoran.
+- **Timer Penghitung Waktu Durasi Makan**: Timer penghitung mundur secara *real-time* untuk memantau sisa waktu makan di setiap meja.
+- **Riwayat Sesi Makan (Dining History)**: Pencatatan riwayat sesi makan pelanggan yang telah selesai dengan fitur pencarian, filter, dan paginasi.
+- **Desain Ramah Touchscreen POS**: Antarmuka yang dioptimalkan untuk input cepat oleh staf restoran pada perangkat POS.
 
-## Tech Stack
+---
+
+## Aturan Alokasi Meja
+
+- **Kapasitas Meja**:
+  - Meja A: 2 Kursi
+  - Meja B: 4 Kursi
+  - Meja C: 6 Kursi
+  - Meja D: 8 Kursi
+- **Penempatan Otomatis**: Pelanggan dialokasikan secara otomatis ke meja kosong terkecil yang muat menampung jumlah rombongan.
+- **Rumus Durasi Makan**: `(jumlah_rombongan × 15) + random(5 sampai 15)` menit.
+- **Pindah Meja & Penempatan Manual**: Staf dapat memindahkan pelanggan antar meja atau menempatkan antrean secara manual via *drag-and-drop*.
+
+---
+
+## Teknologi yang Digunakan
 
 - **Backend**: Laravel 12 (PHP 8.2+)
 - **Frontend**: React 18, Vite, Tailwind CSS
-- **Database**: PostgreSQL (Supabase / Local)
+- **Database**: PostgreSQL (Supabase Cloud / Lokal)
 - **HTTP Client**: Axios
 
-## Setup & Local Development
+---
 
-### 1. Prerequisites
-- PHP >= 8.2 & Composer
-- Node.js >= 18 & NPM
-- PostgreSQL (or SQLite)
+## Panduan Instalasi & Pengembangan Lokal
 
-### 2. Installation
+### 1. Prasyarat Sistem
+- PHP versi 8.2 atau lebih baru & Composer
+- Node.js versi 18 atau lebih baru & NPM
+- Database PostgreSQL (atau SQLite untuk uji coba cepat)
+
+### 2. Langkah Instalasi
 
 ```bash
-# Clone project repository
+# Clone repositori proyek
 git clone https://github.com/Kazuchan1889/RestoWeb.git
 cd RestoWeb
 
-# Install PHP dependencies
+# Install dependensi PHP
 composer install
 
-# Install Node dependencies
+# Install dependensi Node.js
 npm install
 
-# Setup environment
+# Salin file konfigurasi lingkungan
 cp .env.example .env
+
+# Generate application key
 php artisan key:generate
 
-# Run database migrations and seed default tables
+# Jalankan migrasi database dan seed data awal meja
 php artisan migrate:fresh --seed
 ```
 
-### 3. Running Locally
+### 3. Menjalankan Server Lokal
 
-Run both Laravel backend server and Vite dev server concurrently:
+Jalankan backend Laravel dan frontend Vite secara bersamaan dengan satu perintah:
 
 ```bash
 npm run dev
 ```
 
-The application will be accessible at `http://localhost:8000`.
+Aplikasi dapat diakses di browser melalui alamat: `http://localhost:8000`.
 
-## Testing
+---
 
-Run backend and frontend tests:
+## Pengujian Sistem (Testing)
+
+Jalankan pengujian unit dan fitur backend serta frontend:
 
 ```bash
-# Backend Tests (PHPUnit)
+# Pengujian Backend (PHPUnit)
 php artisan test
 
-# Frontend Tests (Vitest)
+# Pengujian Frontend (Vitest)
 npm run test
 ```
 
-## Production & Deployment
+---
 
-To compile frontend production assets:
+## Kompilasi & Deployment Production
+
+Untuk mengompilasi aset frontend produksi:
 
 ```bash
 npm run build
 ```
 
-The project includes `api/index.php` and `vercel.json` for Vercel Serverless Function deployments.
+Proyek ini telah dilengkapi dengan entrypoint `api/index.php` dan file konfigurasi `vercel.json` untuk deployment Serverless Function di Vercel.
 
-## Project Structure
+---
+
+## Struktur Proyek
 
 ```
 ├── app/
 │   ├── Http/Controllers/Api/QueueController.php
 │   ├── Models/
+│   │   ├── RestaurantTable.php
+│   │   ├── Queue.php
+│   │   └── DiningSession.php
 │   └── Services/QueueService.php
 ├── bootstrap/
 │   ├── app.php
@@ -102,9 +127,13 @@ The project includes `api/index.php` and `vercel.json` for Vercel Serverless Fun
 ├── database/
 │   ├── migrations/
 │   └── seeders/
+│       └── TableSeeder.php
+├── public/
+│   └── Ratatulii.png               # Logo & Icon Aplikasi Ratatouille
 ├── resources/
 │   ├── js/
 │   │   ├── components/
+│   │   │   ├── App.jsx
 │   │   │   ├── ArrivalForm.jsx
 │   │   │   ├── HistoryTable.jsx
 │   │   │   ├── LiveTimer.jsx
@@ -117,6 +146,8 @@ The project includes `api/index.php` and `vercel.json` for Vercel Serverless Fun
 └── vite.config.js
 ```
 
-## License
+---
 
-MIT License.
+## Lisensi
+
+Lisensi MIT.
