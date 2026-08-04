@@ -1,0 +1,77 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: rasto_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo_pgsql, pgsql, mbstring
+          coverage: none
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # ─── Step 1: Install Dependencies ────────────────────────
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Install Node dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Copy environment file
+        run: cp .env.example .env
+
+      - name: Generate application key
+        run: php artisan key:generate
+
+      # ─── Step 2: Run Unit Tests ──────────────────────────────
+      - name: Run backend tests (PHPUnit)
+        run: php artisan test --filter=QueueSystemTest
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ':memory:'
+
+      - name: Run frontend tests (Vitest)
+        run: npm run test
+
+      # ─── Step 3: Build Frontend ──────────────────────────────
+      - name: Build frontend assets
+        run: npm run build
+
+      # ─── Step 4: Deploy Staging (Optional) ───────────────────
+      # Uncomment and configure for your deployment target
+      # - name: Deploy to staging
+      #   if: github.ref == 'refs/heads/develop'
+      #   run: |
+      #     npx vercel --token=${{ secrets.VERCEL_TOKEN }} --prod
