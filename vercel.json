@@ -1,21 +1,23 @@
 {
     "version": 2,
-    "builds": [
-        {
-            "src": "public/**",
-            "use": "@vercel/static"
+    "buildCommand": "npm run build",
+    "functions": {
+        "api/index.php": {
+            "runtime": "vercel-php@0.7.3"
         }
-    ],
+    },
     "routes": [
         {
             "src": "/build/(.*)",
             "dest": "/public/build/$1"
         },
         {
+            "src": "/favicon.ico",
+            "dest": "/public/favicon.ico"
+        },
+        {
             "src": "/(.*)",
-            "dest": "/public/index.html"
+            "dest": "/api/index.php"
         }
-    ],
-    "buildCommand": "npm run build",
-    "outputDirectory": "public"
+    ]
 }
