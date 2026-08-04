@@ -1,11 +1,11 @@
 <?php
 
-// Ensure environment variables are loaded in getenv, $_ENV, and $_SERVER
+// Ensure environment variables are loaded for Vercel Serverless Function
 $defaultEnvs = [
     'APP_NAME' => 'RestoWeb',
     'APP_ENV' => 'production',
     'APP_KEY' => 'base64:jf/8miNZpO28NA0ngh4JMnxmCkn580TGsEwt65MBo8w=',
-    'APP_DEBUG' => 'true',
+    'APP_DEBUG' => 'false',
     'APP_URL' => 'https://resto-web-chi.vercel.app',
     'LOG_CHANNEL' => 'stderr',
     'DB_CONNECTION' => 'pgsql',
@@ -53,7 +53,7 @@ try {
     require __DIR__ . '/../public/index.php';
 } catch (\Throwable $e) {
     http_response_code(500);
-    echo "<h1>Laravel Exception (500)</h1>";
+    echo "<h1>Laravel Boot Exception (500)</h1>";
     echo "<p><strong>Message:</strong> " . htmlspecialchars($e->getMessage()) . "</p>";
     echo "<p><strong>File:</strong> " . htmlspecialchars($e->getFile()) . " (Line " . $e->getLine() . ")</p>";
     echo "<pre>" . htmlspecialchars($e->getTraceAsString()) . "</pre>";
