@@ -63,13 +63,15 @@ composer install
 # Install dependensi Node.js
 npm install
 
-# Salin file konfigurasi lingkungan
+# Salin file konfigurasi lingkungan (.env sudah terkonfigurasi ke Supabase Cloud PostgreSQL)
 cp .env.example .env
 
 # Generate application key
 php artisan key:generate
 
-# Jalankan migrasi database dan seed data awal meja
+# Migrasi Database & Seeding (Opsional):
+# Proyek ini terhubung ke Supabase Cloud PostgreSQL yang sudah terisi skema tabel & data awal untuk deployment Vercel.
+# Langkah migrasi ini opsional dan hanya dijalankan jika Anda ingin menyetel ulang atau menggunakan database lokal (PostgreSQL/SQLite).
 php artisan migrate:fresh --seed
 ```
 
