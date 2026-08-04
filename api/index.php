@@ -28,6 +28,7 @@ $storageDirs = [
     '/tmp/storage/framework/cache',
     '/tmp/storage/framework/sessions',
     '/tmp/storage/logs',
+    '/tmp/database',
 ];
 foreach ($storageDirs as $dir) {
     if (!is_dir($dir)) {
@@ -35,5 +36,20 @@ foreach ($storageDirs as $dir) {
     }
 }
 
-// Forward Vercel requests to Laravel entrypoint
-require __DIR__ . '/../public/index.php';
+// Check if vendor/autoload.php exists
+if (!file_exists(__DIR__ . '/../vendor/autoload.php')) {
+    http_response_code(500);
+    echo "<h1>Vercel Deployment Error</h1>";
+    echo "<p><code>vendor/autoload.php</code> not found. Composer dependencies were not installed during build.</p>";
+    exit(1);
+}
+
+try {
+    // Forward Vercel requests to Laravel entrypoint
+    require __DIR__ . '/../public/index.php';
+} catch (\Throwable $e) {
+    http_response_code(500);
+    echo "<h1>Laravel Exception (500)</h1>";
+    echo "<p><strong>Error:</strong> " . htmlspecialchars($e->getMessage()) . "</p>";
+    echo "<pre>" . htmlspecialchars($e->getTraceAsString()) . "</pre>";
+}

@@ -4,7 +4,7 @@
     "type": "module",
     "scripts": {
         "dev": "concurrently --kill-others \"php artisan serve\" \"vite\"",
-        "build": "vite build",
+        "build": "composer install --no-dev --prefer-dist --optimize-autoloader && vite build",
         "test": "vitest run",
         "test:watch": "vitest"
     },
