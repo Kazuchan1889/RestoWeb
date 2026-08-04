@@ -21,7 +21,7 @@ $defaultEnvs = [
 ];
 
 foreach ($defaultEnvs as $k => $v) {
-    if (!getenv($k) && !isset($_ENV[$k]) && !isset($_SERVER[$k])) {
+    if (empty($_ENV[$k]) && empty($_SERVER[$k]) && empty(getenv($k))) {
         putenv("{$k}={$v}");
         $_ENV[$k] = $v;
         $_SERVER[$k] = $v;
